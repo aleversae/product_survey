@@ -2,7 +2,12 @@ package com.ameddi.productsurvey.model;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.annotation.NonNull;
+
+import com.ameddi.productsurvey.R;
+
 import java.util.List;
+import java.util.UUID;
 
 public class Survey {
     String name;
@@ -10,6 +15,14 @@ public class Survey {
     String details;
     List<Field> fields;
     List<Product> products;
+
+    public static Survey random() {
+
+        Survey survey = new Survey();
+        survey.setName( "Survey "+UUID.randomUUID().toString());
+        survey.setDetails("descripción descriptiva que describida descriptivamente, describe describaciones");
+        return survey;
+    }
 
     public String getName() {
         return name;
@@ -45,5 +58,11 @@ public class Survey {
 
     public void addField(String name, Field field){
 
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return getName()+ "|"+ getDetails();
     }
 }

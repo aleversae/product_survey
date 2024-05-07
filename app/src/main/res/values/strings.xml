@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ProductSurvey</string>
+    <string name="survey_menu">&gt;</string>
+    <string name="share">Compartir</string>
+    <string name="delete">Borrar</string>
+    <string name="edit">Editar</string>
+    <string name="fillout">Rellenar</string>
+    <string name="add_survey">Añadir</string>
 </resources>
