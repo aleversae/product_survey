@@ -1,27 +1,53 @@
 package com.ameddi.productsurvey.model;
 
-import android.database.sqlite.SQLiteDatabase;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.ameddi.productsurvey.R;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Survey {
+public class Survey implements  Parcelable {
+    int id;
     String name;
-    int Id;
     String details;
+    String document;
     List<Field> fields;
     List<Product> products;
+
+
+
+    public Survey() {
+
+    }
+
+
 
     public static Survey random() {
 
         Survey survey = new Survey();
-        survey.setName( "Survey "+UUID.randomUUID().toString());
+        survey.setName("Survey " + UUID.randomUUID().toString());
         survey.setDetails("descripción descriptiva que describida descriptivamente, describe describaciones");
         return survey;
+    }
+
+    public static Survey defaultValue() {
+        Survey survey = new Survey();
+        survey.setName("");
+        survey.setDetails("");
+        survey.setFields(new ArrayList<>());
+        survey.setProducts(new ArrayList<>());
+        return survey;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -31,6 +57,7 @@ public class Survey {
     public void setName(String name) {
         this.name = name;
     }
+
 
     public String getDetails() {
         return details;
@@ -56,13 +83,46 @@ public class Survey {
         this.products = products;
     }
 
-    public void addField(String name, Field field){
+    public void addField(String name, Field field) {
 
     }
 
     @NonNull
     @Override
     public String toString() {
-        return getName()+ "|"+ getDetails();
+        return getName() + "|" + getDetails();
     }
+
+    //Parcelable interface
+    protected Survey(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        details = in.readString();
+        document = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeString(details);
+        dest.writeString(document);
+    }
+
+    public static final Creator<Survey> CREATOR = new Creator<Survey>() {
+        @Override
+        public Survey createFromParcel(Parcel in) {
+            return new Survey(in);
+        }
+
+        @Override
+        public Survey[] newArray(int size) {
+            return new Survey[size];
+        }
+
+    };
 }

@@ -13,13 +13,18 @@
         android:theme="@style/Theme.ProductSurvey"
         tools:targetApi="31">
         <activity
-            android:name=".survey_controller.SurveyList"
+            android:name=".survey_controller.SurveyListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".survey_controller.SurveyEditionActivity"
+            android:exported="true">
+
         </activity>
     </application>
 

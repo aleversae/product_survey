@@ -14,8 +14,11 @@ import com.ameddi.productsurvey.R;
 import com.ameddi.productsurvey.model.Survey;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class SurveyAdapter extends ArrayAdapter<Survey> {
+
+    private Function<Survey, Runnable> surveyOnClickListenerFunction;
 
     public SurveyAdapter(@NonNull Context context, @NonNull List<Survey> objects) {
 
@@ -43,7 +46,13 @@ public class SurveyAdapter extends ArrayAdapter<Survey> {
         description.setText(item.getDetails());
         SurveyMenuOnCLickListener clickListener = new SurveyMenuOnCLickListener(getContext());
         clickListener.addAction(R.id.survey_delete, () -> this.remove(item));
+        clickListener.addAction(R.id.survey_edit, surveyOnClickListenerFunction.apply(item));
         actions.setOnClickListener(clickListener);
         return element;
+    }
+
+    public void addEditClick(Function<Survey, Runnable> surveyOnClickListenerFunction) {
+
+        this.surveyOnClickListenerFunction = surveyOnClickListenerFunction;
     }
 }
