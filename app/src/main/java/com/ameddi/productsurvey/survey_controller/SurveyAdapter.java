@@ -12,18 +12,20 @@ import androidx.annotation.Nullable;
 
 import com.ameddi.productsurvey.R;
 import com.ameddi.productsurvey.model.Survey;
+import com.ameddi.productsurvey.persistency.Persistency;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 public class SurveyAdapter extends ArrayAdapter<Survey> {
 
+    Persistency persistency = null;
     private Function<Survey, Runnable> surveyOnClickListenerFunction;
 
-    public SurveyAdapter(@NonNull Context context, @NonNull List<Survey> objects) {
-
-        super(context, R.layout.survey_list_element, objects);
-
+    public SurveyAdapter(@NonNull Context context) {
+        super(context, R.layout.survey_list_element, new ArrayList<>());
+        persistency = new Persistency(context);
     }
 
     @NonNull
@@ -47,6 +49,7 @@ public class SurveyAdapter extends ArrayAdapter<Survey> {
         SurveyMenuOnCLickListener clickListener = new SurveyMenuOnCLickListener(getContext());
         clickListener.addAction(R.id.survey_delete, () -> this.remove(item));
         clickListener.addAction(R.id.survey_edit, surveyOnClickListenerFunction.apply(item));
+
         actions.setOnClickListener(clickListener);
         return element;
     }
@@ -54,5 +57,14 @@ public class SurveyAdapter extends ArrayAdapter<Survey> {
     public void addEditClick(Function<Survey, Runnable> surveyOnClickListenerFunction) {
 
         this.surveyOnClickListenerFunction = surveyOnClickListenerFunction;
+
     }
+
+    public void loadFromDB() {
+        List<Survey> surveys = persistency.getSurveys();
+        clear();
+        addAll(surveys);
+    }
+
+
 }

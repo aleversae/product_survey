@@ -14,10 +14,10 @@ import java.util.List;
 
 public class Persistency {
     private final Context context;
-    private final int surveyDbVersion =1;
-    private final String SurveyDbName="surveyDB";
+    private final int surveyDbVersion = 1;
+    private final String SurveyDbName = "surveyDB";
+    private final String allSurveys = "SELECT rowId, name, details FROM Survey ";
     BaseDBOpenHelper surveyDbHelper;
-    private final String allSurveys="SELECT rowId, name, details FROM Survey ";
 
     public Persistency(Context context) {
         this.context = context;
@@ -28,11 +28,11 @@ public class Persistency {
     public List<Survey> getSurveys() {
         SQLiteDatabase readableDatabase = surveyDbHelper.getReadableDatabase();
         //readableDatabase.execSQL(allSurveys);
-        String[] columns = (String[])Arrays.asList("rowid", "name", "details").toArray();
+        String[] columns = (String[]) Arrays.asList("rowid", "name", "details").toArray();
 
         Cursor surveyCursor = readableDatabase.rawQuery(allSurveys, null);
         ArrayList<Survey> surveys = new ArrayList<>();
-        if(surveyCursor.moveToFirst()){
+        if (surveyCursor.moveToFirst()) {
             do {
                 surveys.add(readSurvey(surveyCursor));
             } while (surveyCursor.moveToNext());
@@ -59,9 +59,8 @@ public class Persistency {
 
 
         try {
-            writableDatabase.execSQL("INSERT INTO Survey(name, details) values(? , ? )" , param);
-        }
-        catch (SQLException e){
+            writableDatabase.execSQL("INSERT INTO Survey(name, details) values(? , ? )", param);
+        } catch (SQLException e) {
             return false;
         }
         return true;
