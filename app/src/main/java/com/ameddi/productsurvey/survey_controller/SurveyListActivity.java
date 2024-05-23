@@ -2,6 +2,7 @@ package com.ameddi.productsurvey.survey_controller;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -12,7 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ameddi.productsurvey.R;
+import com.ameddi.productsurvey.db.BaseDBOpenHelper;
 import com.ameddi.productsurvey.model.Survey;
+import com.ameddi.productsurvey.persistency.Persistency;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
@@ -24,10 +27,14 @@ public class SurveyListActivity extends AppCompatActivity {
     private ArrayList<Survey> surveys;
 
     private SurveyAdapter surveyAdapter;
-
+    BaseDBOpenHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BaseDBOpenHelper dbHelper = new BaseDBOpenHelper(this, "Surveys", null, 1);
+
+
+
         setContentView(R.layout.activity_survey_list);
 
         surveyAdapter = new SurveyAdapter(this, new ArrayList<>());
@@ -51,21 +58,21 @@ public class SurveyListActivity extends AppCompatActivity {
                 surveyAdapter.addAll(surveys_);
             }
         }
-        Intent intent = getIntent();
-        if (intent != null) {
-            Survey survey = (Survey) intent.getParcelableExtra("survey");
-            if (survey != null) {
-                Toast.makeText(this, survey.toString(), Toast.LENGTH_SHORT).show();
-                surveyAdapter.add(survey);
-            }
-        }
-
+        Persistency persistency = new Persistency(this);
+        List<Survey> surveys1 = persistency.getSurveys();
+        surveyAdapter.addAll(surveys1);
         FloatingActionButton addButton = findViewById(R.id.survey_add);
         addButton.setOnClickListener(v->gotoEdit().apply(null).run());
-        FloatingActionButton addMockButton = findViewById(R.id.survey_add_mock);
-        addMockButton.setOnClickListener(v -> {
-            surveyAdapter.add(Survey.random());
-        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Persistency persistency = new Persistency(this);
+        List<Survey> surveys1 = persistency.getSurveys();
+        surveyAdapter.clear();
+        surveyAdapter.addAll(surveys1);
+
     }
 
     @Override

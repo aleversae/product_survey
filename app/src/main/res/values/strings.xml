@@ -10,4 +10,5 @@
     <string name="edit_survey_description">Descripción</string>
     <string name="save">Guardar</string>
     <string name="cancel">Cancelar</string>
+    <string name="edit_survey_unable_to_insert">No se pudo insertar</string>
 </resources>

@@ -12,12 +12,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.ameddi.productsurvey.R;
 import com.ameddi.productsurvey.model.Survey;
+import com.ameddi.productsurvey.persistency.Persistency;
 
 public class SurveyEditionActivity extends AppCompatActivity {
     Survey survey;
     EditText name;
     EditText description;
     Button btnSave, btnCancel;
+    Persistency persistency=null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +63,19 @@ public class SurveyEditionActivity extends AppCompatActivity {
 
         btnSave = findViewById(R.id.edit_save);
         btnSave.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SurveyListActivity.class);
             if (survey != null) {
                 updateSurvey();
-                intent.putExtra("survey", survey);
+                if(persistency== null){
+                    persistency = new Persistency(this);
+                    if(!persistency.insert(survey)){
+                        Toast.makeText(this, R.string.edit_survey_unable_to_insert, Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        finish();
+                    }
+
+                }
             }
-            startActivity(intent);
         });
     }
 
