@@ -47,7 +47,10 @@ public class SurveyAdapter extends ArrayAdapter<Survey> {
         name.setText(item.getName());
         description.setText(item.getDetails());
         SurveyMenuOnCLickListener clickListener = new SurveyMenuOnCLickListener(getContext());
-        clickListener.addAction(R.id.survey_delete, () -> this.remove(item));
+        clickListener.addAction(R.id.survey_delete, () -> {
+            persistency.removeSurvey(item);
+            loadFromDB();
+        });
         clickListener.addAction(R.id.survey_edit, surveyOnClickListenerFunction.apply(item));
 
         actions.setOnClickListener(clickListener);

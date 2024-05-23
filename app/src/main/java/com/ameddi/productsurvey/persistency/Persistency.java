@@ -65,4 +65,11 @@ public class Persistency {
         }
         return true;
     }
+
+    public void removeSurvey(Survey item) {
+        SQLiteDatabase writableDatabase = surveyDbHelper.getWritableDatabase();
+        Integer[] params = {item.getId()};
+        writableDatabase.execSQL("DELETE FROM Survey WHERE rowid=?", params);
+
+    }
 }

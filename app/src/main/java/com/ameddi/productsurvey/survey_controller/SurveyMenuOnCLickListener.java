@@ -30,12 +30,12 @@ public class SurveyMenuOnCLickListener implements View.OnClickListener {
         PopupMenu popupMenu = new PopupMenu(context, v);
         popupMenu.getMenuInflater().inflate(R.menu.survey_actions, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(menuItem -> {
-            Toast.makeText(context, menuItem.getTitle(), Toast.LENGTH_LONG).show();
             Runnable action = actions.get(menuItem.getItemId());
             if (action != null) {
                 action.run();
                 return true;
             } else {
+                Toast.makeText(context, "\"" + menuItem.getTitle() + "\" no implementado", Toast.LENGTH_LONG).show();
                 return false;
             }
         });
