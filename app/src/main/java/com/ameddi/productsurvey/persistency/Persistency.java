@@ -56,8 +56,6 @@ public class Persistency {
         Object[] param = new Object[2];
         param[0] = survey.getName();
         param[1] = survey.getDetails();
-
-
         try {
             writableDatabase.execSQL("INSERT INTO Survey(name, details) values(? , ? )", param);
         } catch (SQLException e) {
@@ -65,6 +63,20 @@ public class Persistency {
         }
         return true;
     }
+    public boolean update(Survey survey) {
+        SQLiteDatabase writableDatabase = surveyDbHelper.getWritableDatabase();
+        Object[] param = new Object[3];
+        param[0] = survey.getName();
+        param[1] = survey.getDetails();
+        param[2] = survey.getId();
+        try {
+            writableDatabase.execSQL("UPDATE Survey SET name = ?, details = ? WHERE rowid = ?", param);
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
+    }
+
 
     public void removeSurvey(Survey item) {
         SQLiteDatabase writableDatabase = surveyDbHelper.getWritableDatabase();

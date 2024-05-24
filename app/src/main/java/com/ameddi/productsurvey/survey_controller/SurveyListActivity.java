@@ -1,6 +1,5 @@
 package com.ameddi.productsurvey.survey_controller;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ListView;
@@ -14,7 +13,6 @@ import com.ameddi.productsurvey.model.Survey;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.function.Function;
 
 public class SurveyListActivity extends AppCompatActivity {
     BaseDBOpenHelper dbHelper;
@@ -28,7 +26,6 @@ public class SurveyListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_survey_list);
 
         surveyAdapter = new SurveyAdapter(this);
-        surveyAdapter.addEditClick(gotoEdit());
         ListView surveysView = findViewById(R.id.surveys_view);
         surveysView.setAdapter(surveyAdapter);
 
@@ -43,14 +40,25 @@ public class SurveyListActivity extends AppCompatActivity {
                 assert surveys_ != null;
             }
         }
+
         if (surveys_ != null) {
             surveyAdapter.addAll(surveys_);
         } else {
             surveyAdapter.loadFromDB();
         }
 
+        surveyAdapter.setOnEditSurveyListener(s -> {
+            Intent intent = new Intent(this, SurveyEditionActivity.class);
+            if (s != null) {
+                intent.putExtra("survey", s);
+            }
+            startActivity(intent);
+        });
         FloatingActionButton addButton = findViewById(R.id.survey_add);
-        addButton.setOnClickListener(v -> gotoEdit().apply(null).run());
+        addButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SurveyEditionActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -69,20 +77,4 @@ public class SurveyListActivity extends AppCompatActivity {
         }
         outState.putParcelableArray("surveys", surveys);
     }
-
-    private Function<Survey, Runnable> gotoEdit() {
-        Context context = this;
-        return survey -> new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(context, SurveyEditionActivity.class);
-                if (survey != null) {
-                    intent.putExtra("survey", survey);
-                }
-                startActivity(intent);
-            }
-        };
-    }
-
-
 }

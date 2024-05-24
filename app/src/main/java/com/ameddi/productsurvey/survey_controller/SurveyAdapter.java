@@ -16,16 +16,20 @@ import com.ameddi.productsurvey.persistency.Persistency;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class SurveyAdapter extends ArrayAdapter<Survey> {
 
+
     Persistency persistency = null;
-    private Function<Survey, Runnable> surveyOnClickListenerFunction;
+    private OnEditSurveyListener onEditSurveyListener;
 
     public SurveyAdapter(@NonNull Context context) {
         super(context, R.layout.survey_list_element, new ArrayList<>());
         persistency = new Persistency(context);
+    }
+
+    public void setOnEditSurveyListener(OnEditSurveyListener onEditSurveyListener) {
+        this.onEditSurveyListener = onEditSurveyListener;
     }
 
     @NonNull
@@ -51,22 +55,21 @@ public class SurveyAdapter extends ArrayAdapter<Survey> {
             persistency.removeSurvey(item);
             loadFromDB();
         });
-        clickListener.addAction(R.id.survey_edit, surveyOnClickListenerFunction.apply(item));
+        clickListener.addAction(R.id.survey_edit, () -> onEditSurveyListener.onEditSurvey(item));
+
 
         actions.setOnClickListener(clickListener);
         return element;
-    }
-
-    public void addEditClick(Function<Survey, Runnable> surveyOnClickListenerFunction) {
-
-        this.surveyOnClickListenerFunction = surveyOnClickListenerFunction;
-
     }
 
     public void loadFromDB() {
         List<Survey> surveys = persistency.getSurveys();
         clear();
         addAll(surveys);
+    }
+
+    public interface OnEditSurveyListener {
+        void onEditSurvey(Survey s);
     }
 
 

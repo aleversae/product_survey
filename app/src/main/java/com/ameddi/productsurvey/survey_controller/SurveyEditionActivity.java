@@ -2,7 +2,6 @@ package com.ameddi.productsurvey.survey_controller;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,7 +18,8 @@ public class SurveyEditionActivity extends AppCompatActivity {
     EditText name;
     EditText description;
     Button btnSave, btnCancel;
-    Persistency persistency=null;
+    Persistency persistency = null;
+    boolean isNewSurvey = true;
 
 
     @Override
@@ -63,18 +63,23 @@ public class SurveyEditionActivity extends AppCompatActivity {
 
         btnSave = findViewById(R.id.edit_save);
         btnSave.setOnClickListener(v -> {
+            boolean success = false;
             if (survey != null) {
                 updateSurvey();
-                if(persistency== null){
+                if (persistency == null) {
                     persistency = new Persistency(this);
-                    if(!persistency.insert(survey)){
-                        Toast.makeText(this, R.string.edit_survey_unable_to_insert, Toast.LENGTH_SHORT).show();
+                    if (isNewSurvey) {
+                        success = persistency.insert(survey);
                     }
                     else{
-                        finish();
+                        success = persistency.update(survey);
                     }
-
                 }
+            }
+            if (success) {
+                finish();
+            } else {
+                Toast.makeText(this, R.string.edit_survey_unable_to_insert, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -90,6 +95,7 @@ public class SurveyEditionActivity extends AppCompatActivity {
         if (intent != null) {
             Survey survey = (Survey) intent.getParcelableExtra("survey");
             if (survey != null) {
+                isNewSurvey = false;
                 Toast.makeText(this, survey.toString(), Toast.LENGTH_SHORT).show();
                 this.survey = survey;
                 return true;
@@ -116,18 +122,5 @@ public class SurveyEditionActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 
         outState.putParcelable("survey", survey);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    class Ofcl_ implements View.OnFocusChangeListener {
-
-        @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-
-        }
     }
 }
