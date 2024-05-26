@@ -2,7 +2,8 @@ package com.ameddi.productsurvey.survey_controller;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,30 +19,27 @@ public class SurveyEditionActivity extends AppCompatActivity {
     Survey survey;
     EditText name;
     EditText description;
-    Button btnSave, btnCancel;
     Persistency persistency = null;
     boolean isNewSurvey = true;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null) {
-
-            supportActionBar.hide();
-        }
         setContentView(R.layout.activity_survey_edition);
-
-        if (!applySavedState(savedInstanceState)) {
-            if (!applyInstanceState()) {
+        if (!applyInstanceState()) {
+            if (!applySavedState(savedInstanceState)) {
                 survey = Survey.defaultValue();
             }
         }
 
         assert survey != null;
 
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setTitle((isNewSurvey) ? R.string.new_survey : R.string.edit_survey);
+            //supportActionBar.hide();
+        }
         //Name
         name = (EditText) findViewById(R.id.edit_survey_name);
         name.setText(survey.getName());
@@ -62,30 +60,43 @@ public class SurveyEditionActivity extends AppCompatActivity {
             }
         });
 
+        //TODO:Fields
+    }
 
-        btnCancel = findViewById(R.id.edit_cancel);
-        btnCancel.setOnClickListener(v -> finish());
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.survey_edit_menu, menu);
+        return true;
+    }
 
-        btnSave = findViewById(R.id.edit_save);
-        btnSave.setOnClickListener(v -> {
-            boolean success = false;
-            if (survey != null) {
-                updateSurvey();
-                if (persistency == null) {
-                    persistency = new Persistency(this);
-                    if (isNewSurvey) {
-                        success = persistency.insert(survey);
-                    } else {
-                        success = persistency.update(survey);
-                    }
-                }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+
+        if (itemId == R.id.opt_save) {
+            boolean success;
+            updateSurvey();
+            if (persistency == null) {
+                persistency = new Persistency(this);
+            }
+            if (isNewSurvey) {
+                success = persistency.insert(survey);
+            } else {
+                success = persistency.update(survey);
             }
             if (success) {
                 finish();
             } else {
                 Toast.makeText(this, R.string.edit_survey_unable_to_insert, Toast.LENGTH_SHORT).show();
+                return false;
             }
-        });
+            return true;
+        }
+
+        if (itemId == R.id.opt_cancel) {
+            finish();
+        }
+        return true;
     }
 
     private void updateSurvey() {
