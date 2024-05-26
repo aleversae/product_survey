@@ -7,6 +7,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ameddi.productsurvey.R;
@@ -26,7 +27,11 @@ public class SurveyEditionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
 
+            supportActionBar.hide();
+        }
         setContentView(R.layout.activity_survey_edition);
 
         if (!applySavedState(savedInstanceState)) {
@@ -70,8 +75,7 @@ public class SurveyEditionActivity extends AppCompatActivity {
                     persistency = new Persistency(this);
                     if (isNewSurvey) {
                         success = persistency.insert(survey);
-                    }
-                    else{
+                    } else {
                         success = persistency.update(survey);
                     }
                 }
