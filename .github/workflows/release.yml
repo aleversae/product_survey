@@ -34,7 +34,7 @@ jobs:
     #    name: ProductSurvey-debug.apk
     #    path: app/build/outputs/apk/debug/app-debug.apk
     - name: check variables
-      run: echo ${{github.ref}}
+      run: echo ${{github}}
      
     - name: Create Release
       id: create_release
