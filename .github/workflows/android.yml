@@ -13,7 +13,7 @@ jobs:
     - name: Checkout⤵️
       uses: actions/checkout@v4.1.0
     - name: Setup Java JDK
-      uses: actions/setup-java@3.13.0
+      uses: actions/setup-java@v4.2.1
     - name: APK build action
       uses: MayMeow/apk-build-action@v3
     - name: Gradle
