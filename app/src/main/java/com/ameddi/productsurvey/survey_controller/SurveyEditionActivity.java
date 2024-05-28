@@ -13,13 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.ameddi.productsurvey.R;
 import com.ameddi.productsurvey.model.Survey;
-import com.ameddi.productsurvey.persistency.Persistency;
+import com.ameddi.productsurvey.persistency.MainDbManager;
 
 public class SurveyEditionActivity extends AppCompatActivity {
     Survey survey;
     EditText name;
     EditText description;
-    Persistency persistency = null;
+    MainDbManager mainDbManager = null;
     boolean isNewSurvey = true;
 
     @Override
@@ -76,13 +76,13 @@ public class SurveyEditionActivity extends AppCompatActivity {
         if (itemId == R.id.opt_save) {
             boolean success;
             updateSurvey();
-            if (persistency == null) {
-                persistency = new Persistency(this);
+            if (mainDbManager == null) {
+                mainDbManager = new MainDbManager(this);
             }
             if (isNewSurvey) {
-                success = persistency.insert(survey);
+                success = mainDbManager.insert(survey);
             } else {
-                success = persistency.update(survey);
+                success = mainDbManager.update(survey);
             }
             if (success) {
                 finish();

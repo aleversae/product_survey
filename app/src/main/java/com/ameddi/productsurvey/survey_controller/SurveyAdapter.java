@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 
 import com.ameddi.productsurvey.R;
 import com.ameddi.productsurvey.model.Survey;
-import com.ameddi.productsurvey.persistency.Persistency;
+import com.ameddi.productsurvey.persistency.MainDbManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +20,12 @@ import java.util.List;
 public class SurveyAdapter extends ArrayAdapter<Survey> {
 
 
-    Persistency persistency = null;
+    MainDbManager mainDbManager = null;
     private OnEditSurveyListener onEditSurveyListener;
 
     public SurveyAdapter(@NonNull Context context) {
         super(context, R.layout.survey_list_element, new ArrayList<>());
-        persistency = new Persistency(context);
+        mainDbManager = new MainDbManager(context);
     }
 
     public void setOnEditSurveyListener(OnEditSurveyListener onEditSurveyListener) {
@@ -52,7 +52,7 @@ public class SurveyAdapter extends ArrayAdapter<Survey> {
         description.setText(item.getDetails());
         SurveyMenuOnCLickListener clickListener = new SurveyMenuOnCLickListener(getContext());
         clickListener.addAction(R.id.survey_delete, () -> {
-            persistency.removeSurvey(item);
+            mainDbManager.removeSurvey(item);
             loadFromDB();
         });
         clickListener.addAction(R.id.survey_edit, () -> onEditSurveyListener.onEditSurvey(item));
@@ -63,7 +63,7 @@ public class SurveyAdapter extends ArrayAdapter<Survey> {
     }
 
     public void loadFromDB() {
-        List<Survey> surveys = persistency.getSurveys();
+        List<Survey> surveys = mainDbManager.getSurveys();
         clear();
         addAll(surveys);
     }
@@ -71,6 +71,5 @@ public class SurveyAdapter extends ArrayAdapter<Survey> {
     public interface OnEditSurveyListener {
         void onEditSurvey(Survey s);
     }
-
 
 }

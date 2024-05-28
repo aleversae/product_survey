@@ -5,33 +5,36 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.ameddi.productsurvey.db.BaseDBOpenHelper;
+import com.ameddi.productsurvey.persistency.db.BaseDBOpenHelper;
 import com.ameddi.productsurvey.model.Survey;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Persistency {
+public class MainDbManager {
     private final Context context;
     private final int surveyDbVersion = 1;
     private final String SurveyDbName = "surveyDB";
     private final String allSurveys = "SELECT rowId, name, details FROM Survey ";
+
     BaseDBOpenHelper surveyDbHelper;
 
-    public Persistency(Context context) {
+    public MainDbManager(Context context) {
         this.context = context;
         surveyDbHelper = new BaseDBOpenHelper(context, SurveyDbName, null, surveyDbVersion);
     }
 
 
     public List<Survey> getSurveys() {
+
         SQLiteDatabase readableDatabase = surveyDbHelper.getReadableDatabase();
         //readableDatabase.execSQL(allSurveys);
         String[] columns = (String[]) Arrays.asList("rowid", "name", "details").toArray();
 
         Cursor surveyCursor = readableDatabase.rawQuery(allSurveys, null);
         ArrayList<Survey> surveys = new ArrayList<>();
+
         if (surveyCursor.moveToFirst()) {
             do {
                 surveys.add(readSurvey(surveyCursor));

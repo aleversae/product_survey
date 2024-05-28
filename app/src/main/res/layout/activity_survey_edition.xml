@@ -8,7 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="20">
 
 
         <TextView
@@ -19,15 +20,17 @@
         <EditText
             android:id="@+id/edit_survey_name"
             android:layout_width="match_parent"
-            android:layout_height="91dp"
+            android:layout_height="10dp"
             android:gravity="center_vertical"
             android:importantForAutofill="no"
             android:inputType="text"
             android:paddingStart="20dp"
-            android:text="@string/edit_survey_name" />
+            android:paddingEnd="20dp"
+            android:layout_weight="2"
+            android:hint="@string/edit_survey_name"
+             />
 
         <TextView
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/edit_survey_description" />
@@ -35,13 +38,26 @@
         <EditText
             android:id="@+id/edit_survey_description"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="10dp"
             android:gravity="center_vertical"
             android:importantForAutofill="no"
             android:inputType="textMultiLine"
             android:paddingStart="20dp"
-            android:text="@string/edit_survey_description" />
+            android:paddingEnd="20dp"
+            android:layout_weight="3"
+            android:hint="@string/edit_survey_description"
+             />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_survey_fields" />
+
+        <ListView
+            android:id="@+id/edit_survey_field_list"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_weight="15" />
 
     </LinearLayout>
 

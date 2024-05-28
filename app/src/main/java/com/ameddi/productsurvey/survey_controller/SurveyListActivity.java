@@ -8,8 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ameddi.productsurvey.R;
-import com.ameddi.productsurvey.db.BaseDBOpenHelper;
+import com.ameddi.productsurvey.persistency.db.BaseDBOpenHelper;
 import com.ameddi.productsurvey.model.Survey;
+import com.ameddi.productsurvey.persistency.db.SurveyDescriptionDBOpenHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -59,6 +60,12 @@ public class SurveyListActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SurveyEditionActivity.class);
             startActivity(intent);
         });
+
+        FloatingActionButton experimentoButton = findViewById(R.id.experimento);
+        experimentoButton.setOnClickListener(v -> {
+            SurveyDescriptionDBOpenHelper surveyDescriptionDBOpenHelper = new SurveyDescriptionDBOpenHelper(this, null, null, 1);
+
+        });
     }
 
     @Override
@@ -77,4 +84,6 @@ public class SurveyListActivity extends AppCompatActivity {
         }
         outState.putParcelableArray("surveys", surveys);
     }
+
+
 }
