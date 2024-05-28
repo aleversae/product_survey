@@ -21,6 +21,9 @@ jobs:
       uses: gradle/actions/setup-gradle@v3
     - name: Build with Gradle
       run: ./gradlew build
+    - name: find artifact
+      run: find . -type f -name '*apk*'
+      
     - name: Upload Artifact
       uses: actions/upload-artifact@v4.3.3
       with:
