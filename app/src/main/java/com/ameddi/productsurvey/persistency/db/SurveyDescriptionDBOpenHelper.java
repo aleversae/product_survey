@@ -41,6 +41,7 @@ public class SurveyDescriptionDBOpenHelper extends SQLiteOpenHelper {
         File dataDirectory = Environment.getDataDirectory();
 
         Log.i("cositas", Environment.getRootDirectory().toString());
+        //Log.i("cositas", Environment.);
         //Log
         //Environment.getStorageDirectory();
 

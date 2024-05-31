@@ -14,9 +14,9 @@ import java.util.List;
 
 public class MainDbManager {
     private final Context context;
-    private final int surveyDbVersion = 1;
+    private final int surveyDbVersion = 2;
     private final String SurveyDbName = "surveyDB";
-    private final String allSurveys = "SELECT rowId, name, details FROM Survey ";
+    private final String allSurveys = "SELECT rowId, name, details, remoteKey FROM Survey ";
 
     BaseDBOpenHelper surveyDbHelper;
 
@@ -29,8 +29,6 @@ public class MainDbManager {
     public List<Survey> getSurveys() {
 
         SQLiteDatabase readableDatabase = surveyDbHelper.getReadableDatabase();
-        //readableDatabase.execSQL(allSurveys);
-        String[] columns = (String[]) Arrays.asList("rowid", "name", "details").toArray();
 
         Cursor surveyCursor = readableDatabase.rawQuery(allSurveys, null);
         ArrayList<Survey> surveys = new ArrayList<>();
@@ -49,7 +47,9 @@ public class MainDbManager {
         Survey survey = new Survey();
         survey.setName(surveyCursor.getString(1));
         survey.setDetails(surveyCursor.getString(2));
+        survey.setRemoteKey(surveyCursor.getString(3));
         survey.setId(surveyCursor.getInt(0));
+        //document
         return survey;
     }
 
@@ -59,8 +59,13 @@ public class MainDbManager {
         Object[] param = new Object[2];
         param[0] = survey.getName();
         param[1] = survey.getDetails();
+        param[1] = survey.getRemoteKey();
         try {
-            writableDatabase.execSQL("INSERT INTO Survey(name, details) values(? , ? )", param);
+            writableDatabase.beginTransaction();
+            writableDatabase.execSQL("INSERT INTO Survey(name, details, remoteKey) values(? , ?, ? )", param);
+            //document creation
+            writableDatabase.endTransaction();
+
         } catch (SQLException e) {
             return false;
         }
@@ -68,12 +73,16 @@ public class MainDbManager {
     }
     public boolean update(Survey survey) {
         SQLiteDatabase writableDatabase = surveyDbHelper.getWritableDatabase();
-        Object[] param = new Object[3];
+        Object[] param = new Object[4];
         param[0] = survey.getName();
         param[1] = survey.getDetails();
-        param[2] = survey.getId();
+        param[2] = survey.getRemoteKey();
+        param[3] = survey.getId();
         try {
-            writableDatabase.execSQL("UPDATE Survey SET name = ?, details = ? WHERE rowid = ?", param);
+            writableDatabase.beginTransaction();
+            writableDatabase.execSQL("UPDATE Survey SET name = ?, details = ?, remoteKey = ? WHERE rowid = ?", param);
+            writableDatabase.endTransaction();
+
         } catch (SQLException e) {
             return false;
         }

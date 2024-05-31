@@ -14,4 +14,6 @@
     <string name="new_survey">Nueva encuesta</string>
     <string name="edit_survey">Editar encuesta</string>
     <string name="edit_survey_fields">Campos</string>
+    <string name="field_label_name">Nombre</string>
+    <string name="field_edit_name">Nombre</string>
 </resources>

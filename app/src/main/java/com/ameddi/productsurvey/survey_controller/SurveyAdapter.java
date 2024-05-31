@@ -13,6 +13,10 @@ import androidx.annotation.Nullable;
 import com.ameddi.productsurvey.R;
 import com.ameddi.productsurvey.model.Survey;
 import com.ameddi.productsurvey.persistency.MainDbManager;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,11 +56,22 @@ public class SurveyAdapter extends ArrayAdapter<Survey> {
         description.setText(item.getDetails());
         SurveyMenuOnCLickListener clickListener = new SurveyMenuOnCLickListener(getContext());
         clickListener.addAction(R.id.survey_delete, () -> {
+            FirebaseDatabase.getInstance().getReference().child("surveys").child(item.getRemoteKey()).setValue(null);
             mainDbManager.removeSurvey(item);
             loadFromDB();
         });
         clickListener.addAction(R.id.survey_edit, () -> onEditSurveyListener.onEditSurvey(item));
 
+        clickListener.addAction(R.id.survey_share, () -> {
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference surveys = dbr.child("surveys").push();
+            String key = surveys.getKey();
+            item.setRemoteKey(key);
+            mainDbManager.update(item);
+
+
+
+        });
 
         actions.setOnClickListener(clickListener);
         return element;

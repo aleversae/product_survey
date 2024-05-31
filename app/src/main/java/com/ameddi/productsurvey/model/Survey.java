@@ -16,7 +16,7 @@ public class Survey implements  Parcelable {
     String document;
     List<Field> fields;
     List<Product> products;
-
+    private String remoteKey;
 
 
     public Survey() {
@@ -83,9 +83,20 @@ public class Survey implements  Parcelable {
         this.products = products;
     }
 
+
+    public String getDocument() {
+        return document;
+    }
+
+    public void setDocument(String document) {
+        this.document = document;
+    }
+
     public void addField(String name, Field field) {
 
+
     }
+
 
     @NonNull
     @Override
@@ -125,4 +136,12 @@ public class Survey implements  Parcelable {
         }
 
     };
+
+    public void setRemoteKey(String remoteKey) {
+        this.remoteKey = remoteKey;
+    }
+
+    public String getRemoteKey() {
+        return remoteKey;
+    }
 }

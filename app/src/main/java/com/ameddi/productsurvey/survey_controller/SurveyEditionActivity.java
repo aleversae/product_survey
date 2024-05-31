@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,8 +15,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ameddi.productsurvey.R;
+import com.ameddi.productsurvey.model.Field;
 import com.ameddi.productsurvey.model.Survey;
 import com.ameddi.productsurvey.persistency.MainDbManager;
+import com.ameddi.productsurvey.persistency.SurveyDescriptionDbManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class SurveyEditionActivity extends AppCompatActivity {
     Survey survey;
@@ -21,7 +27,9 @@ public class SurveyEditionActivity extends AppCompatActivity {
     EditText description;
     MainDbManager mainDbManager = null;
     boolean isNewSurvey = true;
+    private View fieldEditPannel;
 
+    //FieldListAdapter fieldListAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +40,25 @@ public class SurveyEditionActivity extends AppCompatActivity {
                 survey = Survey.defaultValue();
             }
         }
+        ArrayAdapter<Field> fieldArrayAdapter = new FieldAdapter(this, R.layout.field_list_element);
+        fieldEditPannel = findViewById(R.id.field_edit_ph);
+        GridView gridViewFields = findViewById(R.id.edit_survey_field_list);
+        gridViewFields.setOnItemClickListener((parent, view, position, id) -> {
+            view.setSelected(true);
+
+        });
+        gridViewFields.setAdapter(fieldArrayAdapter);
+        FloatingActionButton fab = findViewById(R.id.experimento);
+        fab.setOnClickListener(v -> {
+            fieldArrayAdapter.add(new Field(){});
+
+            toggle(fieldEditPannel);
+
+        });
+
+
+
+
 
         assert survey != null;
 
@@ -61,6 +88,10 @@ public class SurveyEditionActivity extends AppCompatActivity {
         });
 
         //TODO:Fields
+        if (survey.getDocument()!=null) {
+           // new SurveyDescriptionDbManager(this
+
+        }
     }
 
     @Override
@@ -102,6 +133,7 @@ public class SurveyEditionActivity extends AppCompatActivity {
     private void updateSurvey() {
         survey.setName(name.getText().toString());
         survey.setDetails(description.getText().toString());
+        //survey.setFields(FieldListAdapter)
 
     }
 
@@ -137,5 +169,8 @@ public class SurveyEditionActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 
         outState.putParcelable("survey", survey);
+    }
+    private static void toggle(View view) {
+        view.setVisibility( (view.getVisibility() == View.VISIBLE)? View.GONE:View.VISIBLE  );
     }
 }
